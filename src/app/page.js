@@ -1,58 +1,170 @@
 "use client";
 
 import { useState } from "react";
-import { redirect } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
+import {
+  Anchor,
+  Box,
+  Burger,
+  Button,
+  Container,
+  Divider,
+  Drawer,
+  Group,
+  ScrollArea,
+  Text,
+  Title
+} from '@mantine/core';
+import { useDisclosure } from "@mantine/hooks";
+import classes from './Splash.module.css';
+import Navbar from "@/components/Navbar.jsx";
 
-export default function App() {
+const userLinks = [
+  { link: '#', label: 'Privacy & Security' },
+  { link: '#', label: 'Account settings' },
+  { link: '#', label: 'Support options' },
+];
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+const mainLinks = [
+  { link: '#', label: 'Book a demo' },
+  { link: '#', label: 'Documentation' },
+  { link: '#', label: 'Community' },
+  { link: '#', label: 'Academy' },
+  { link: '#', label: 'Forums' },
+];
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    const { data, error } = await authClient.signUp.email({
-      username,
-      password,
-      name: "Tester",
-      email: "example@example.com"
-    }, {
-      onSuccess: (ctx) => {
-        redirect("/home");
-      },
-      onError: (ctx) => {
-        console.log(ctx.error);
-      }
-    })
-  };
+export default function Splash() {
+  const [opened, { toggle, close }] = useDisclosure(false);
+  const [active, setActive] = useState(0);
+
+  const mainItems = mainLinks.map((item, index) => (
+    <Anchor
+      href={item.link}
+      key={item.label}
+      className={classes.mainLink}
+      data-active={index === active || undefined}
+      onClick={(event) => {
+        event.preventDefault();
+        setActive(index);
+      }}
+    >
+      {item.label}
+    </Anchor>
+  ));
+
+  const secondaryItems = userLinks.map((item) => (
+    <Anchor
+      href={item.link}
+      key={item.label}
+      onClick={(event) => event.preventDefault()}
+      className={classes.secondaryLink}
+    >
+      {item.label}
+    </Anchor>
+  ));
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="username">Username:</label>
-          <input
-            type="text"
-            id="username"
-            name="username"
-            value={username}
-            onChange={(e) => setUsername(e.currentTarget.value)}
-            required
-          />
+    {/* <Navbar/> */}
+    <header className={classes.header}>
+      <Container className={classes.inner2}>
+        {/* <MantineLogo size={34} /> */}
+        <div style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "10px"
+        }}>
+          <img src="/trip.svg" width="50px"></img>
+          <span style={{
+            fontWeight: "bold"
+          }}>Loggage</span>
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.currentTarget.value)}
-            required
-          />
+        <Box className={classes.links} visibleFrom="sm">
+          <Group justify="flex-end">{secondaryItems}</Group>
+          <Group gap={0} justify="flex-end" className={classes.mainLinks}>
+            {mainItems}
+          </Group>
+        </Box>
+        <Burger
+          opened={opened}
+          onClick={toggle}
+          className={classes.burger}
+          size="sm"
+          hiddenFrom="sm"
+          aria-label="Toggle navigation"
+        />
+      </Container>
+
+      <Drawer
+        opened={opened}
+        onClose={close}
+        size="100%"
+        padding="md"
+        title="Navigation"
+        hiddenFrom="sm"
+        zIndex={1000000}
+      >
+        <ScrollArea h="calc(100vh - 80px" mx="-md">
+          <Divider my="sm" />
+          {mainLinks.map((item) => (
+            <a
+              href={item.link}
+              key={item.label}
+              className={classes.drawerLink}
+              onClick={(event) => event.preventDefault()}
+            >
+              {item.label}
+            </a>
+          ))}
+          <Divider my="sm" />
+          {userLinks.map((item) => (
+            <a
+              href={item.link}
+              key={item.label}
+              className={classes.drawerLink}
+              onClick={(event) => event.preventDefault()}
+            >
+              {item.label}
+            </a>
+          ))}
+        </ScrollArea>
+      </Drawer>
+    </header>
+    <div className={classes.root}>
+      <Container size="lg">
+        <div className={classes.inner}>
+          <div className={classes.content}>
+            <Title className={classes.title}>
+              A{' '}
+              <Text
+                component="span"
+                inherit
+                variant="gradient"
+                gradient={{ from: 'pink', to: 'yellow' }}
+              >
+                fully featured
+              </Text>{' '}
+              React components library
+            </Title>
+
+            <Text className={classes.description} mt={30}>
+              Build fully functional accessible web applications with ease – Mantine includes more
+              than 100 customizable components and hooks to cover you in any situation
+            </Text>
+
+            <Button
+              variant="gradient"
+              gradient={{ from: 'pink', to: 'yellow' }}
+              size="xl"
+              className={classes.control}
+              mt={40}
+            >
+              Get started
+            </Button>
+          </div>
         </div>
-        <input type="submit" value="Sign Up"/>
-      </form>
+      </Container>
+    </div>
     </>
-  )
+  );
 }

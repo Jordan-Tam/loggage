@@ -11,6 +11,9 @@
   "dependencies": {
     "@apollo/server": "5.5.1",
     "@better-auth/mongo-adapter": "1.6.13",
+    "@mantine/core": "^9.3.0",
+    "@mantine/hooks": "^9.3.0",
+    "@tabler/icons-react": "^3.44.0",
     "better-auth": "1.6.13",
     "graphql": "16.14.1",
     "kysely": "0.28.17",
@@ -24,6 +27,9 @@
     "@tailwindcss/postcss": "^4",
     "eslint": "^9",
     "eslint-config-next": "16.2.7",
+    "postcss": "^8.5.15",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
     "tailwindcss": "^4"
   },
   "overrides": {
