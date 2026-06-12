@@ -6,7 +6,7 @@ import {
 } from '@mantine/core';
 import "@mantine/core/styles.css";
 import "./globals.css";
-import MantineShell from "@/components/MantineShell";
+import Providers from "@/components/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,11 +34,9 @@ export default function RootLayout({ children }) {
         <ColorSchemeScript />
       </head>
       <body /* className="min-h-full flex flex-col" */>
-        <MantineProvider>
-          <MantineShell>
-            {children}
-          </MantineShell>
-        </MantineProvider>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

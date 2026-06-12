@@ -1,103 +1,196 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import {
+  IconBook,
+  IconChartPie3,
+  IconChevronDown,
+  IconCode,
+  IconCoin,
+  IconFingerprint,
+  IconNotification,
+} from '@tabler/icons-react';
 import {
   Anchor,
   Box,
   Burger,
   Button,
+  Center,
+  Collapse,
   Container,
   Divider,
   Drawer,
   Group,
+  HoverCard,
   ScrollArea,
+  SimpleGrid,
   Text,
-  Title
+  ThemeIcon,
+  Title,
+  UnstyledButton,
+  useMantineTheme
 } from '@mantine/core';
 import { useDisclosure } from "@mantine/hooks";
-import classes from './Splash.module.css';
-import Navbar from "@/components/Navbar.jsx";
+import heroClasses from './Hero.module.css';
+import headerClasses from './Header.module.css';
+import Navbar from "@/components/Navbar2.jsx";
 
-const userLinks = [
-  { link: '#', label: 'Privacy & Security' },
-  { link: '#', label: 'Account settings' },
-  { link: '#', label: 'Support options' },
-];
-
-const mainLinks = [
-  { link: '#', label: 'Book a demo' },
-  { link: '#', label: 'Documentation' },
-  { link: '#', label: 'Community' },
-  { link: '#', label: 'Academy' },
-  { link: '#', label: 'Forums' },
+const mockdata = [
+  {
+    icon: IconCode,
+    title: 'Feature 1',
+    description: 'Feature 1 description',
+  },
+  {
+    icon: IconCoin,
+    title: 'Feature 2',
+    description: 'Feature 2 description',
+  },
+  {
+    icon: IconBook,
+    title: 'Feature 3',
+    description: 'Feature 3 description',
+  },
+  {
+    icon: IconFingerprint,
+    title: 'Feature 4',
+    description: 'Feature 4 description',
+  },
+  {
+    icon: IconChartPie3,
+    title: 'Feature 5',
+    description: 'Feature 5 description',
+  },
+  {
+    icon: IconNotification,
+    title: 'Feature 6',
+    description: 'Feature 6 description',
+  },
 ];
 
 export default function Splash() {
-  const [opened, { toggle, close }] = useDisclosure(false);
-  const [active, setActive] = useState(0);
 
-  const mainItems = mainLinks.map((item, index) => (
-    <Anchor
-      href={item.link}
-      key={item.label}
-      className={classes.mainLink}
-      data-active={index === active || undefined}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(index);
-      }}
-    >
-      {item.label}
-    </Anchor>
-  ));
+  const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
+  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
+  const theme = useMantineTheme();
 
-  const secondaryItems = userLinks.map((item) => (
-    <Anchor
-      href={item.link}
-      key={item.label}
-      onClick={(event) => event.preventDefault()}
-      className={classes.secondaryLink}
-    >
-      {item.label}
-    </Anchor>
+  const links = mockdata.map((item) => (
+    <UnstyledButton className={headerClasses.subLink} key={item.title}>
+      <Group wrap="nowrap" align="flex-start">
+        <ThemeIcon size={34} variant="default" radius="md">
+          <item.icon size={22} color={theme.colors.blue[6]} />
+        </ThemeIcon>
+        <div>
+          <Text size="sm" fw={500}>
+            {item.title}
+          </Text>
+          <Text size="xs" c="dimmed">
+            {item.description}
+          </Text>
+        </div>
+      </Group>
+    </UnstyledButton>
   ));
 
   return (
     <>
-    {/* <Navbar/> */}
-    <header className={classes.header}>
-      <Container className={classes.inner2}>
-        {/* <MantineLogo size={34} /> */}
-        <div style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "10px"
-        }}>
-          <img src="/trip.svg" width="50px"></img>
-          <span style={{
-            fontWeight: "bold"
-          }}>Loggage</span>
-        </div>
-        <Box className={classes.links} visibleFrom="sm">
-          <Group justify="flex-end">{secondaryItems}</Group>
-          <Group gap={0} justify="flex-end" className={classes.mainLinks}>
-            {mainItems}
+
+    {/* Header section */}
+
+    <Box /* pb={120} */>
+      <header className={headerClasses.header}>
+        <Group justify="space-between" h="100%">
+          {/* <MantineLogo size={30} /> */}
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "10px"
+          }}>
+            <img src="/trip.svg" width="50px"></img>
+            <span style={{
+              fontWeight: "bold"
+            }}>Loggage</span>
+          </div>
+
+          <Group h="100%" gap={0} visibleFrom="sm">
+
+            {/* Home */}
+            <Link href="/" className={headerClasses.link}>
+              Home
+            </Link>
+
+            {/* Features */}
+            <HoverCard width={600} position="bottom" radius="md" shadow="md" withinPortal>
+              <HoverCard.Target>
+                <a href="#" className={headerClasses.link}>
+                  <Center inline>
+                    <Box component="span" mr={5}>
+                      Features
+                    </Box>
+                    <IconChevronDown size={16} color={theme.colors.blue[6]} />
+                  </Center>
+                </a>
+              </HoverCard.Target>
+
+              <HoverCard.Dropdown style={{ overflow: 'hidden' }}>
+                <Group justify="space-between" px="md">
+                  <Text fw={500}>Features</Text>
+                  <Anchor href="#" fz="xs">
+                    View all
+                  </Anchor>
+                </Group>
+
+                <Divider my="sm" />
+
+                <SimpleGrid cols={2} spacing={0}>
+                  {links}
+                </SimpleGrid>
+
+                <div className={headerClasses.dropdownFooter}>
+                  <Group justify="space-between">
+                    <div>
+                      <Text fw={500} fz="sm">
+                        Get started
+                      </Text>
+                      <Text size="xs" c="dimmed">
+                        Get started
+                      </Text>
+                    </div>
+                    <Button variant="default">Get started</Button>
+                  </Group>
+                </div>
+              </HoverCard.Dropdown>
+            </HoverCard>
+
+            {/* About */}
+            <a href="#" className={headerClasses.link}>
+              About
+            </a>
           </Group>
-        </Box>
-        <Burger
-          opened={opened}
-          onClick={toggle}
-          className={classes.burger}
-          size="sm"
-          hiddenFrom="sm"
-          aria-label="Toggle navigation"
-        />
-      </Container>
+
+          <Group visibleFrom="sm">
+            <Button variant="default" component={Link} href="/login">
+              Log in
+            </Button>
+            <Button component={Link} href="/signup">
+              Sign up
+            </Button>
+          </Group>
+
+          <Burger
+            opened={drawerOpened}
+            onClick={toggleDrawer}
+            hiddenFrom="sm"
+            aria-label="Toggle navigation"
+          />
+        </Group>
+      </header>
 
       <Drawer
-        opened={opened}
-        onClose={close}
+        opened={drawerOpened}
+        onClose={closeDrawer}
         size="100%"
         padding="md"
         title="Navigation"
@@ -106,36 +199,48 @@ export default function Splash() {
       >
         <ScrollArea h="calc(100vh - 80px" mx="-md">
           <Divider my="sm" />
-          {mainLinks.map((item) => (
-            <a
-              href={item.link}
-              key={item.label}
-              className={classes.drawerLink}
-              onClick={(event) => event.preventDefault()}
-            >
-              {item.label}
-            </a>
-          ))}
+
+          <a href="#" className={headerClasses.link}>
+            Home
+          </a>
+          <UnstyledButton className={headerClasses.link} onClick={toggleLinks}>
+            <Center inline>
+              <Box component="span" mr={5}>
+                Features
+              </Box>
+              <IconChevronDown size={16} color={theme.colors.blue[6]} />
+            </Center>
+          </UnstyledButton>
+          <Collapse expanded={linksOpened}>{links}</Collapse>
+          <a href="#" className={headerClasses.link}>
+            Learn
+          </a>
+          <a href="#" className={headerClasses.link}>
+            Academy
+          </a>
+
           <Divider my="sm" />
-          {userLinks.map((item) => (
-            <a
-              href={item.link}
-              key={item.label}
-              className={classes.drawerLink}
-              onClick={(event) => event.preventDefault()}
-            >
-              {item.label}
-            </a>
-          ))}
+
+          <Group justify="center" grow pb="xl" px="md">
+            <Button variant="default" component={Link} href="/login">
+              Log in
+            </Button>
+            <Button component={Link} href="/signup">
+              Sign up
+            </Button>
+          </Group>
         </ScrollArea>
       </Drawer>
-    </header>
-    <div className={classes.root}>
+    </Box>
+
+    {/* Hero section */}
+    <div className={`${heroClasses.root}`}>
       <Container size="lg">
-        <div className={classes.inner}>
-          <div className={classes.content}>
-            <Title className={classes.title}>
-              A{' '}
+        <div className={heroClasses.inner}>
+          <div className={heroClasses.content}>
+            <Title className={heroClasses.title}>
+              The free and collaborative tool to help keep track of everything you bring on vacation
+              {/* A{' '}
               <Text
                 component="span"
                 inherit
@@ -144,19 +249,18 @@ export default function Splash() {
               >
                 fully featured
               </Text>{' '}
-              React components library
+              React components library */}
             </Title>
 
-            <Text className={classes.description} mt={30}>
-              Build fully functional accessible web applications with ease – Mantine includes more
-              than 100 customizable components and hooks to cover you in any situation
+            <Text className={heroClasses.description} mt={30}>
+              Create packing lists, categorize belongings and assign them to specific individuals and bags, track the current status of items, and record the history of item usage.
             </Text>
 
             <Button
               variant="gradient"
               gradient={{ from: 'pink', to: 'yellow' }}
               size="xl"
-              className={classes.control}
+              className={heroClasses.control}
               mt={40}
             >
               Get started

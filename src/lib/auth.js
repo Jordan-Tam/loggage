@@ -21,6 +21,9 @@ export const auth = betterAuth({
     username({
       minUsernameLength: 8,
       maxUsernameLength: 20,
+      usernameNormalization: (username) => {
+        return username; // stop automatic lowercase conversion
+      },
       usernameValidator: (username) => {
         if (false) {
           return false;
@@ -32,11 +35,36 @@ export const auth = betterAuth({
   ],
   user: {
     additionalFields: {
-      placeholder: {
-        type: "string",
+      testStrings: {
+        type: "string[]",
+        defaultValue: [],
         required: false,
-        defaultValue: ""
-      }
+        input: false
+      },
+      packingLists: {
+        type: "string[]",
+        defaultValue: [],
+        required: false,
+        input: false,
+      },
+      templates: {
+        type: "string[]",
+        defaultValue: [],
+        required: false,
+        input: false,
+      },
+      favoritedTemplates: {
+        type: "string[]",
+        defaultValue: [],
+        required: false,
+        input: false,
+      },
+      friends: {
+        type: "string[]",
+        defaultValue: [],
+        required: false,
+        input: false,
+      },
     }
   }
 });

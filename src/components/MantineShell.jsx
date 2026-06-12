@@ -1,31 +1,46 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
     AppShell,
-    Burger,
-    Group
+    Burger
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import Navbar from "@/components/Navbar.jsx";
 
 export default function MantineShell({ children }) {
+    const pathname = usePathname();
     const [opened, { toggle }] = useDisclosure();
+    const hideNavbar = ["/", "/login", "/signup"].includes(pathname);
     return (
     <AppShell
-        padding="md"
+        /* padding="md" */
         /* header={{ height: 60 }} */
-        navbar={{
-            width: 300,
-            breakpoint: 'sm',
-            collapsed: { mobile: !opened },
-        }}
+        navbar={
+            hideNavbar
+            ?
+            undefined
+            :
+            {
+                width: 80,
+                breakpoint: 'sm',
+                collapsed: { mobile: !opened },
+            }
+        }
     >
-        <AppShell.Navbar>
-            <Navbar />
-        </AppShell.Navbar>
-        <AppShell.Main>
+
+        {!hideNavbar && <AppShell.Header>
+            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="md" m="md"/>
+        </AppShell.Header> }
+        
+        {!hideNavbar && <AppShell.Navbar withBorder={false}>
+            <Navbar toggle={toggle}/>
+        </AppShell.Navbar> }
+
+        <AppShell.Main mt={hideNavbar ? 0 : {base: 60, sm: 0}} /* ml={20} mt={20} */>
             {children}
         </AppShell.Main>
+
     </AppShell>
     )
 }

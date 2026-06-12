@@ -9,7 +9,9 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@apollo/client": "^4.2.2",
     "@apollo/server": "5.5.1",
+    "@as-integrations/next": "^4.1.0",
     "@better-auth/mongo-adapter": "1.6.13",
     "@mantine/core": "^9.3.0",
     "@mantine/hooks": "^9.3.0",
