@@ -13,6 +13,12 @@ export const auth = betterAuth({
     client: client,
     transaction: false
   }),
+  session: {
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60 // 5 minutes
+    }
+  },
   emailAndPassword: {
     enabled: true,
     // autoSignIn: false

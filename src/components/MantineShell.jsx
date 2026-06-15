@@ -37,7 +37,10 @@ export default function MantineShell({ children }) {
             <Navbar toggle={toggle}/>
         </AppShell.Navbar> }
 
-        <AppShell.Main mt={hideNavbar ? 0 : {base: 60, sm: 0}} /* ml={20} mt={20} */>
+        <AppShell.Main
+            mt={hideNavbar ? 0 : {base: 90, sm: 0}}
+            mb={20}
+        >
             {children}
         </AppShell.Main>
 

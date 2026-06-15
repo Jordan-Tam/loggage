@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { redirect, useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
+    IconBell,
     IconCheckupList,
     IconHome2,
     IconListSearch,
@@ -59,15 +60,16 @@ const mockdata = [
 
 export default function Navbar({ toggle }) {
 
+    const pathname = usePathname();
     const router = useRouter();
 
-    const [active, setActive] = useState(0); // set to -1 when opening a list
+    const [active, setActive] = useState(-1); // set to -1 when opening a list
 
     const links = mockdata.map((link, index) => (
         <NavbarLink
             {...link}
             key={link.label}
-            active={index === active}
+            active={index === active || pathname === link.url}
             onClick={() => {
                 setActive(index);
                 //redirect(link.url);
@@ -99,6 +101,7 @@ export default function Navbar({ toggle }) {
 
         <Stack justify="center" gap={0}>
             <NavbarLink icon={IconSwitchHorizontal} label="Change account" />
+            <NavbarLink icon={IconBell} label="Notifications" />
             <NavbarLink
                 icon={IconLogout}
                 label="Logout"

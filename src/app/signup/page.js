@@ -144,7 +144,8 @@ export default function Signup() {
                 </Anchor>
             </Group> */}
             <Button
-                fullWidth mt="xl"
+                fullWidth
+                mt="xl"
                 radius="md"
                 onClick={handleSignUp}
                 disabled={disabled}

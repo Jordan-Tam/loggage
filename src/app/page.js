@@ -34,7 +34,6 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import heroClasses from './Hero.module.css';
 import headerClasses from './Header.module.css';
-import Navbar from "@/components/Navbar2.jsx";
 
 const mockdata = [
   {
@@ -69,7 +68,7 @@ const mockdata = [
   },
 ];
 
-export default function Splash() {
+export default function Home() {
 
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] = useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
@@ -170,6 +169,7 @@ export default function Splash() {
             </a>
           </Group>
 
+          {/* Login and register buttons */}
           <Group visibleFrom="sm">
             <Button variant="default" component={Link} href="/login">
               Log in
@@ -179,6 +179,7 @@ export default function Splash() {
             </Button>
           </Group>
 
+          {/* Burger button that shows up on smaller screens */}
           <Burger
             opened={drawerOpened}
             onClick={toggleDrawer}
@@ -188,6 +189,7 @@ export default function Splash() {
         </Group>
       </header>
 
+      {/* Drawer component that opens when pressing the burger button and contains all the header stuff that gets removed on smaller screens. */}
       <Drawer
         opened={drawerOpened}
         onClose={closeDrawer}

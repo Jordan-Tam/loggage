@@ -18,3 +18,5 @@ const closeConnection = async () => {
 };
 
 export {databaseConnection, closeConnection};
+
+// await MongoClient.connect(mongoConfig.serverUrl).db(mongoConfig.database).collection(collection)
