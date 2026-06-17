@@ -69,8 +69,7 @@ const itemSchema = new mongoose.Schema({
         type: String
     },
     assignedTo: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
+        type: mongoose.Schema.Types.ObjectId
     }
 });
 
@@ -88,7 +87,7 @@ const packingListSchema = new mongoose.Schema({
                     if (!user) {
                         return false;
                     }
-                    await closeConnection();
+                    // await closeConnection(); This line causes the error "Packing List validation failed: owner: Client must be connected before running operations"
                     return true;
                 },
                 message: "User doesn't exist."
@@ -115,7 +114,7 @@ const packingListSchema = new mongoose.Schema({
         default: []
     },
     categories: {
-        type: [labelSchema],
+        type: [String],
         default: []
     },
     items: {
@@ -128,6 +127,62 @@ const packingListSchema = new mongoose.Schema({
     }
 });
 
-const packingListModel = mongoose.model("Packing List", packingListSchema);
+packingListSchema.pre("save", async function() {
+    this.$locals.wasNew = this.isNew;
+    this.$locals.wasOwner = this.owner;
+    this.$locals.wasOwnerModified = this.isModified("owner");
+});
+
+packingListSchema.pre("deleteOne", { document: false, query: true }, async function() {
+    this._doc = await this.model.findOne(this.getQuery());
+})
+
+packingListSchema.post("save", async function(doc) {
+    console.log("Post save");
+    if (doc.$locals.wasNew) {
+        const usersCollection = await users();
+        const updateOwnerDocument = await usersCollection.findOneAndUpdate(
+            { _id: doc.owner },
+            { $push: {packingLists: doc._id }},
+            { returnDocument: "after" }
+        );
+    } else {
+        if (doc.$locals.wasOwnerModified) {
+            const updateOwnerDocument1 = await usersCollection.findOneAndUpdate(
+                { _id: doc.$locals.wasOwner },
+                { $pull: {packingLists: doc._id }},
+                { returnDocument: "after" }
+            );
+            const updateOwnerDocument2 = await usersCollection.findOneAndUpdate(
+                { _id: doc.owner },
+                { $push: {packingLists: doc._id }},
+                { returnDocument: "after" }
+            )
+        }
+    }
+});
+
+// For "await packingList.findOne({ _id: args._id }).deleteOne()"
+packingListSchema.post("deleteOne", { document: true, query: false }, async function(doc) {
+    const usersCollection = await users();
+    const updateOwnerDocument = await usersCollection.findOneAndUpdate(
+        { _id: doc.owner },
+        { $pull: {packingLists: doc._id} },
+        { returnDocument: "after" }
+    );
+});
+
+// For "await packingList.deleteOne({ _id: args._id })"
+packingListSchema.post("deleteOne", { document: false, query: true }, async function() {
+    const usersCollection = await users();
+    const updateOwnerDocument = await usersCollection.findOneAndUpdate(
+        { _id: this._doc.owner },
+        { $pull: {packingLists: this._doc._id } },
+        { returnDocument: "after" }
+    );
+});
+
+console.log(mongoose.modelNames());
+const packingListModel = mongoose.models['Packing List'] || mongoose.model("Packing List", packingListSchema);
 
 export default packingListModel;

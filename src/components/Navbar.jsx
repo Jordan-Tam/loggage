@@ -63,15 +63,15 @@ export default function Navbar({ toggle }) {
     const pathname = usePathname();
     const router = useRouter();
 
-    const [active, setActive] = useState(-1); // set to -1 when opening a list
+    //const [active, setActive] = useState(-1); // set to -1 when opening a list
 
     const links = mockdata.map((link, index) => (
         <NavbarLink
             {...link}
             key={link.label}
-            active={index === active || pathname === link.url}
+            active={pathname === link.url}
             onClick={() => {
-                setActive(index);
+                //setActive(index);
                 //redirect(link.url);
                 router.push(link.url);
             }}

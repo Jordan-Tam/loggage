@@ -1,5 +1,6 @@
 import { ApolloServer } from "@apollo/server";
 import { startServerAndCreateNextHandler } from "@as-integrations/next";
+import {GraphQLError} from 'graphql';
 import { typeDefs } from "@/graphql/typeDefs";
 import { resolvers } from "@/graphql/resolvers";
 import { auth } from "@/lib/auth";
@@ -15,9 +16,20 @@ const handler = startServerAndCreateNextHandler(server, {
             headers: req.headers,
         });
 
-        return {
-            session,
-            user: session.user
+        // If user is logged out, session === null.
+
+        console.log(session);
+
+        if (session) {
+            return {
+                session,
+                user: session.user
+            };
+        } else {
+            throw new GraphQLError(
+                "You need to be signed in to perform this action.", {
+                extensions: {code: "UNAUTHENTICATED"}
+            });
         }
     }
 });

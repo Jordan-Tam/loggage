@@ -44,8 +44,8 @@ type PackingList {
 
 type Query {
     getAllUsers: [User]
-    getAllPackingListsOfUser(_id: String!): [PackingList]
-    getOnePackingListOfUser(userId: String!, listId: String!): [PackingList]
+    getAllPackingListsOfUser(userId: String!): [PackingList]
+    getPackingListOfUser(userId: String!, listId: String!): PackingList
 }
 
 type Mutation {

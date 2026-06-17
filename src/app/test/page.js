@@ -54,9 +54,9 @@ export default function Test() {
         return <div>Loading...</div>
     }
 
-    if (!session) {
+    /* if (!session) {
         return <div>Not logged in</div>
-    }
+    } */
 
     return (
         <>
@@ -64,7 +64,7 @@ export default function Test() {
                 <Text className="border-1 border-red-500" ta="center">Hello!!!!!!!!!!!!!!!Hello!!!!!!!!!!!!!!!Hello!!!!!!!!!!!!!!!Hello!!!!!!!!!!!!!!!Hello!!!!!!!!!!!!!!!Hello!!!!!!!!!!!!!!!Hello!!!!!!!!!!!!!!!Hello!!!!!!!!!!!!!!!Hello!!!!!!!!!!!!!!!Hello!!!!!!!!!!!!!!!</Text>
                 <Text className="border-1 border-red-500">Hello</Text>
                 <Text className="border-1 border-red-500">Hello</Text>
-                <Text className="border-1 border-red-500">You are {session.user.email}</Text>
+                {/* <Text className="border-1 border-red-500">You are {session.user.email}</Text> */}
             </Container>
             <Container>
                 <TextInput
