@@ -1,10 +1,12 @@
 "use client";
+export const dynamic = 'force-dynamic';
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { gql } from "@apollo/client";
-import { useQuery, useMutation } from "@apollo/client/react";
+import { useQuery, useLazyQuery, useMutation } from "@apollo/client/react";
 import {
+    Anchor,
     Badge,
     Box,
     Button,
@@ -30,34 +32,15 @@ import {
 } from '@tabler/icons-react';
 import { authClient } from "@/lib/auth-client";
 
-const mockdata = [
-    {
-        name: "Business trip 1",
-        description: "Work",
-        color: "blue.5"
-    },
-    {
-        name: "Business trip 2",
-        description: "Work",
-        color: "green.5"
-    },
-    {
-        name: "Business trip 3",
-        description: "Work",
-        color: "black.5"
-    },
-];
-
-function PackingListCard({ name, description, color }) {
+function PackingListCard({ id, name, description, color }) {
 
     return (
         <Card shadow="sm" padding="md" withBorder>
             <Card.Section withBorder>
-                <Box h={150} bg={color}></Box>
+                <Box h={150} bg={color ? color : "#6ea5ff"}></Box>
             </Card.Section>
-            <Text mt="md" size="lg" fw={700}>{name}</Text>
+            <Anchor href={`/list/${id}`} mt="md" size="lg" fw={700}>{name}</Anchor>
             <Text mt={5} mb={15} size="sm" lineClamp={3}>{description}</Text>
-            {/* <Group mt="auto" pl="sm" pr="sm" justify="center" align="center" wrap="nowrap"> */}
             <Flex justify="center" align="center" direction="row" wrap="nowrap">
                 <Button variant="white" color={color} style={{flexShrink: 0}} vars={(theme, props) => ({
                     root: {
@@ -79,14 +62,13 @@ function PackingListCard({ name, description, color }) {
                     <IconDotsVertical stroke={2} />
                 </Button>
             </Flex>
-            {/* </Group> */}
         </Card>
     );
 }
 
 export default function Lists() {
 
-    const { data: session, isPending } = authClient.useSession();
+    const { data: session, isPending, refetch } = authClient.useSession({query: { disableCookieCache: true }});
 
     const router = useRouter();
 
@@ -99,19 +81,35 @@ export default function Lists() {
         query($userId: String!) {
             getAllPackingListsOfUser(userId: $userId) {
                 _id
-                owner
+                owner {
+                    _id
+                }
                 name
                 description
-                collaborators
+                collaborators {
+                    _id
+                }
             }
         }
     `;
     
-    const {
-        data: getAllPackingListsOfUser_data,
-        loading: getAllPackingListsOfUser_loading,
-        error: getAllPackingListsOfUser_error,
-    } = useQuery(GET_ALL_PACKING_LISTS_OF_USER);
+    const [
+        getAllPackingListsOfUser_query, {
+            data: getAllPackingListsOfUser_data,
+            loading: getAllPackingListsOfUser_loading,
+            error: getAllPackingListsOfUser_error
+        }
+    ] = useLazyQuery(GET_ALL_PACKING_LISTS_OF_USER, {
+        fetchPolicy: 'cache-and-network' // this makes the new packing list immediately appear on the screen.
+    });
+
+    useEffect(() => {
+        if (session && session.user) {
+            getAllPackingListsOfUser_query({
+                variables: { userId: session.user.id }
+            });
+        }
+    }, [session]);
 
     const CREATE_PACKING_LIST = gql`
         mutation create_packing_list(
@@ -134,9 +132,8 @@ export default function Lists() {
         loading: createPackingList_loading,
         error: createPackingList_error
     }] = useMutation(CREATE_PACKING_LIST, {
-        onCompleted: (data) => {
-            // console.log("ON COMPLETED");
-            // console.log(data);
+        onCompleted: async (data) => {
+            await refetch({query: { disableCookieCache: true }});
             router.push(`/list/${data.createPackingList._id}`);
         },
         onError: (error) => {
@@ -207,21 +204,22 @@ export default function Lists() {
                     <SimpleGrid cols={{
                         base: 1, md: 3
                     }} mt="lg">
-                        {mockdata.map((data) => (
+                        {getAllPackingListsOfUser.map((data) => (
                             <PackingListCard
                                 key={data.name}
+                                id={data._id}
                                 name={data.name}
                                 description={data.description}
-                                color={data.color}
                             />
                         ))}
                     </SimpleGrid>
                 </Container>
             </>
         );
-    } else if(true) {
-
-    } else if(true) {
-
+    } else if(getAllPackingListsOfUser_loading) {
+        return <>Loading...</>
+    } else if(getAllPackingListsOfUser_error) {
+        console.log(JSON.stringify(getAllPackingListsOfUser_error))
+        return <>ERROR</>
     }
 }

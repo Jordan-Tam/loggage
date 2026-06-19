@@ -6,6 +6,23 @@ import {GraphQLError} from 'graphql';
 
 export const resolvers = {
 
+    PackingList: {
+
+        owner: async (parentValue) => {
+            const usersCollection = await users();
+            const user = await usersCollection.findOne({
+                _id: parentValue.owner
+            });
+            if (!user) {
+                throw new GraphQLError("User Not Found", {
+                    extensions: {code: "NOT_FOUND"}
+                });
+            }
+            return user;
+        }
+
+    },
+
     Query: {
 
         getAllUsers: async () => {
@@ -30,15 +47,8 @@ export const resolvers = {
 
             // Retrieve all packing lists where the user is the owner or a collaborator.
             return (await PackingList.find({
-                _id: { $in: ctx.user.packingLists }
+                _id: { $in: ctx.user.packingLists.map((i) => new ObjectId(i)) }
             }));
-
-            /* return (await PackingList.find({
-                $or: [
-                    { owner: args._id },
-                    { collaborators: args._id }
-                ]
-            })); */
 
         },
 
@@ -51,7 +61,25 @@ export const resolvers = {
                 });
             }
 
+            // Retrieve packing list.
+            const pl = await PackingList.findOne({
+                _id: new ObjectId(args.listId)
+            });
 
+            if (!pl) {
+                throw new GraphQLError("Packing list not found.", {
+                    extensions: {code: "NOT_FOUND"}
+                });   
+            }
+
+            // Check if the packing list belongs to the user.
+            if (pl.owner.toString() !== args.userId || pl.collaborators.includes(new ObjectId(args.userId))) {
+                throw new GraphQLError("Packing list not found.", {
+                    extensions: {code: "NOT_FOUND"}
+                });   
+            }
+
+            return pl;
 
         }
 

@@ -2,6 +2,7 @@ export const typeDefs = `#graphql
 
 type User {
     _id: String
+    username: String
     testStrings: [String]
 }
 

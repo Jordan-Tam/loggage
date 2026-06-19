@@ -121,22 +121,8 @@ export default function List() {
             <>
                 <Container ml={20} size="lg">
                     <Stack mt="xl" gap="lg">
-                        <TextInput
-                            value={name}
-                            onChange={(e) => setName(e.currentTarget.value)}
-                            variant="unstyled"
-                            styles={{
-                                input: {
-                                    fontSize: 'var(--mantine-h1-font-size)',
-                                    fontWeight: 'var(--mantine-h1-font-weight)',
-                                    lineHeight: 'var(--mantine-h1-line-height)',
-                                    color: 'var(--mantine-color-text)',
-                                    width: '100%',
-                                    height: '100%'
-                                }
-                            }}
-                        />
-                        {/* {isEditing ? (<TextInput
+                        {isEditing ? (<TextInput
+                            m={0}
                             ref={inputRef}
                             variant="unstyled"
                             styles={{
@@ -144,8 +130,7 @@ export default function List() {
                                     fontSize: 'var(--mantine-h1-font-size)',
                                     fontWeight: 'var(--mantine-h1-font-weight)',
                                     lineHeight: 'var(--mantine-h1-line-height)',
-                                    color: 'var(--mantine-color-text)', // Matches your theme's text color
-                                    width: '100%',
+                                    color: 'var(--mantine-color-text)',
                             }}}
                             value={name}
                             onChange={(e) => setName(e.currentTarget.value)}
@@ -155,8 +140,18 @@ export default function List() {
                                 setIsEditing(false); // Save on pressing Enter
                                 }
                             }}
-                        />) : (<Title onClick={() => setIsEditing(true)} style={{cursor: "pointer"}} order={1}>{name}</Title>)}
-                        <Text size="lg" c="dimmed">{getPackingListOfUser.description}</Text> */}
+                        />) : (<TextInput m={0} onClick={() => setIsEditing(true)} styles={{
+                            cursor: "pointer",
+                                                            input: {
+                                    fontSize: 'var(--mantine-h1-font-size)',
+                                    fontWeight: 'var(--mantine-h1-font-weight)',
+                                    lineHeight: 'var(--mantine-h1-line-height)',
+                                    color: 'var(--mantine-color-text)',
+                                    backgroundColor: 'var(--mantine-color-white)',
+                                    border: "none"
+                                }
+                        }} order={1} value={name} />)}
+                        <Text size="lg" c="dimmed">{getPackingListOfUser.description}</Text>
                         <Box m={0}>
                             <Table style={{ tableLayout: 'auto', width: 'auto' }} withRowBorders={false}>
                                 <Table.Tbody m={0}>

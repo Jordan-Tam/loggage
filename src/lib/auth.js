@@ -1,6 +1,6 @@
 import { betterAuth } from "better-auth";
-import { username } from "better-auth/plugins";
-import { MongoClient } from "mongodb";
+import { customSession, username } from "better-auth/plugins";
+import { ObjectId, MongoClient } from "mongodb";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import mongoose from "mongoose";
 
@@ -36,6 +36,17 @@ export const auth = betterAuth({
         } else {
           return true;
         }
+      }
+    }),
+    customSession(({ user, session }) => {
+      return {
+        user: {
+          ...user,
+          packingLists: user.packingLists.map((p) => (
+            (new ObjectId(new Uint8Array(Object.values(p.buffer)))).toString()
+          ))
+        },
+        session
       }
     })
   ],
