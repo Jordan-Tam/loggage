@@ -1,18 +1,22 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { gql } from "@apollo/client";
 import { useQuery, useLazyQuery, useMutation } from "@apollo/client/react";
 import { authClient } from "@/lib/auth-client";
 
 import {
+    Accordion,
     Box,
     Button,
+    Collapse,
     Container,
     Divider,
     Flex,
     Group,
+    Menu,
+    NumberInput,
     Stack,
     Table,
     Tabs,
@@ -20,20 +24,21 @@ import {
     TextInput,
     Title
 } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import {
+    IconDotsVertical
+} from '@tabler/icons-react';
 
 export default function List() {
 
     const { data: session, isPending, refetch } = authClient.useSession();
 
-    const [isEditing, setIsEditing] = useState(false);
+    const [owner, setOwner] = useState(null);
     const [name, setName] = useState("");
-    const inputRef = useRef(null);
-
-    useEffect(() => {
-        if (isEditing && inputRef.current) {
-            inputRef.current.focus();
-        }
-    }, [isEditing]);
+    const [description, setDescription] = useState("");
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [quantityTest, setQuantityTest] = useState("");
 
     const params = useParams();
 
@@ -98,7 +103,6 @@ export default function List() {
 
     useEffect(() => {
         if (session && session.user && params) {
-            console.log(session);
             getPackingListOfUser_query({
                 variables: { userId: session.user.id, listId: params.id }
             })
@@ -107,20 +111,19 @@ export default function List() {
 
     useEffect(() => {
         if (getPackingListOfUser_data) {
-            setName(getPackingListOfUser_data.getPackingListOfUser.name)
+            setName(getPackingListOfUser_data.getPackingListOfUser.name);
+            setDescription(getPackingListOfUser_data.getPackingListOfUser.description);
         }
     }, [getPackingListOfUser_data]);
-
 
     if (isPending) { return <></> }
     if (!session) { return <></> }
     if (getPackingListOfUser_data) {
-        console.log(getPackingListOfUser_data)
         const {getPackingListOfUser} = getPackingListOfUser_data;
         return (
             <>
-                <Container ml={20} size="lg">
-                    <Stack mt="xl" gap="lg">
+                <Container ml={20} size="xl">
+                    <Stack mt="xl" gap="lg" /* bd="1px solid var(--mantine-color-gray-3)" */>
                         <TextInput
                             value={name}
                             onChange={(e) => setName(e.currentTarget.value)}
@@ -136,27 +139,20 @@ export default function List() {
                                 }
                             }}
                         />
-                        {/* {isEditing ? (<TextInput
-                            ref={inputRef}
+                        <TextInput /* CHANGE THIS TO A TEXT AREA */
+                            value={description}
+                            onChange={(e) => setDescription(e.currentTarget.value)}
                             variant="unstyled"
                             styles={{
                                 input: {
-                                    fontSize: 'var(--mantine-h1-font-size)',
-                                    fontWeight: 'var(--mantine-h1-font-weight)',
-                                    lineHeight: 'var(--mantine-h1-line-height)',
-                                    color: 'var(--mantine-color-text)', // Matches your theme's text color
-                                    width: '100%',
-                            }}}
-                            value={name}
-                            onChange={(e) => setName(e.currentTarget.value)}
-                            onBlur={() => setIsEditing(false)}
-                            onKeyDown={(event) => {
-                                if (event.key === 'Enter') {
-                                setIsEditing(false); // Save on pressing Enter
+                                    fontSize: "var(--mantine-font-size-lg)",
+                                    color: "var(--mantine-color-dimmed)",
+                                    width: "100%",
+                                    height: "100%"
                                 }
                             }}
-                        />) : (<Title onClick={() => setIsEditing(true)} style={{cursor: "pointer"}} order={1}>{name}</Title>)}
-                        <Text size="lg" c="dimmed">{getPackingListOfUser.description}</Text> */}
+                        />
+                        {/* <Text size="lg" c="dimmed">{getPackingListOfUser.description}</Text> */}
                         <Box m={0}>
                             <Table style={{ tableLayout: 'auto', width: 'auto' }} withRowBorders={false}>
                                 <Table.Tbody m={0}>
@@ -190,9 +186,10 @@ export default function List() {
                         <Group mb="xl">
                             <Button>Add Category</Button>
                             <Button>Add Bag</Button>
+                            <Button>Add Person</Button>
                         </Group>
                         <Tabs variant="outline" defaultValue="category">
-                            <Tabs.List>
+                            <Tabs.List /* className="border-1 border-red-500" */>
                                 <Tabs.Tab value="category">
                                     <Title order={3}>Category View</Title>
                                 </Tabs.Tab>
@@ -203,12 +200,144 @@ export default function List() {
                                     <Title order={3}>People View</Title>
                                 </Tabs.Tab>
                             </Tabs.List>
-                            <Tabs.Panel value="category">
-                                Category content
+
+                            <Tabs.Panel value="category" /* className="border-1 border-red-500" */>
+                                <Container m={0} mt="lg" size="xl">
+                                    {/* <Title order={2} mb="md">Food</Title> */}
+                                    <Group justify="flex-start">
+                                        <TextInput
+                                            value="Food"
+                                            variant="unstyled"
+                                            size={Math.max("Food".length, 1)}
+                                            styles={{
+                                                input: {
+                                                    fontSize: 'var(--mantine-h1-font-size)',
+                                                    fontWeight: 'var(--mantine-h1-font-weight)',
+                                                    lineHeight: 'var(--mantine-h1-line-height)',
+                                                    color: 'var(--mantine-color-text)',
+                                                    width: '100%',
+                                                    height: '100%'
+                                                }
+                                            }}
+                                            mb="md"
+                                        />
+                                        {/* <Menu>
+                                            <Menu.Target>
+                                                <Button></Button>
+                                            </Menu.Target>
+                                        </Menu> */}
+                                    </Group>
+                                    <Box p="md" bd="1px solid red" bdrs="lg" mb="md">
+                                        <Flex gap="md" align="stretch">
+                                            <Stack /* bd="1px solid green" */ flex={1}>
+                                            <TextInput
+                                                value="Potato Chips"
+                                                /* value={name}
+                                                onChange={(e) => setName(e.currentTarget.value)} */
+                                                variant="unstyled"
+                                                styles={{
+                                                    input: {
+                                                        fontSize: 'var(--mantine-h2-font-size)',
+                                                        fontWeight: 'var(--mantine-h2-font-weight)',
+                                                        lineHeight: 'var(--mantine-h2-line-height)',
+                                                        color: 'var(--mantine-color-text)',
+                                                        width: '100%',
+                                                        height: '100%'
+                                                    }
+                                                }}
+                                            />
+                                                <Group>
+                                                    <Text>
+                                                        Quantity:
+                                                    </Text>
+                                                    <TextInput
+                                                        value={quantityTest}
+                                                        variant="unstyled"
+                                                        onChange={(e) => {
+                                                            setQuantityTest(e.currentTarget.value.replace(/[^0-9]/g, ''))
+                                                        }}
+                                                        maxLength={5}
+                                                        radius="xs"
+                                                        size="xs"
+                                                        w="5%"
+                                                        className="border-1 border-red-500"
+                                                    styles={{
+                                                        input: {
+                                                            fontSize: 'var(--mantine-text-font-size)',
+                                                            fontWeight: 'var(--mantine-text-font-weight)',
+                                                            lineHeight: 'var(--mantine-line-height)',
+                                                            color: 'var(--mantine-color-text)',
+                                                            width: '100%',
+                                                            height: '100%'
+                                                        }
+                                                    }}
+                                                    />
+                                                    <Text>Weight: 10g</Text>
+                                                    <Text>Owner: Mark</Text>
+                                                    <Text>Bag: Purse</Text>
+                                                </Group>
+                                                <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+                                            </Stack>
+                                            <Box bd="1px solid blue" w="10%" bg="blue.1"></Box>
+                                        </Flex>
+                                    </Box>
+                                    <Box p="md" bd="1px solid red" bdrs="lg" mb="md">
+                                        <Flex gap="md" align="stretch">
+                                            <Stack /* bd="1px solid green" */ flex={1}>
+                                                <Group>
+                                                    <Title order={4}>Potato Chips</Title>
+                                                    <Text>Quantity: 5</Text>
+                                                    <Text>Weight: 10g</Text>
+                                                    <Text>Owner: Mark</Text>
+                                                    <Text>Bag: Purse</Text>
+                                                </Group>
+                                                <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+                                            </Stack>
+                                            <Box bd="1px solid blue" w="10%" bg="blue.1"></Box>
+                                        </Flex>
+                                    </Box>
+                                    <Box p="md" bd="1px solid red" bdrs="lg">
+                                        <Flex gap="md" align="stretch">
+                                            <Stack /* bd="1px solid green" */ flex={1}>
+                                                <Group>
+                                                    <Title order={4}>Potato Chips</Title>
+                                                    <Text>Quantity: 5</Text>
+                                                    <Text>Weight: 10g</Text>
+                                                    <Text>Owner: Mark</Text>
+                                                    <Text>Bag: Purse</Text>
+                                                </Group>
+                                                <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
+                                            </Stack>
+                                            <Box bd="1px solid blue" w="10%" bg="blue.1"></Box>
+                                        </Flex>
+                                    </Box>
+                                    {/* <Table w="100%">
+                                        <Table.Thead>
+                                            <Table.Tr>
+                                                <Table.Th style={{ width: '25%' }}>Item</Table.Th>
+                                                <Table.Th style={{ width: '5%' }}>Quantity</Table.Th>
+                                                <Table.Th style={{ width: '10%' }}>Weight</Table.Th>
+                                                <Table.Th style={{ width: '15%' }}>Belongs To</Table.Th>
+                                                <Table.Th>Notes</Table.Th>
+                                            </Table.Tr>
+                                        </Table.Thead>
+                                        <Table.Tbody>
+                                            <Table.Tr>
+                                                <Table.Td>Potato Chips</Table.Td>
+                                                <Table.Td>5</Table.Td>
+                                                <Table.Td>10g</Table.Td>
+                                                <Table.Td>Mark</Table.Td>
+                                                <Table.Td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Table.Td>
+                                            </Table.Tr>
+                                        </Table.Tbody>
+                                    </Table> */}
+                                </Container>
                             </Tabs.Panel>
+
                             <Tabs.Panel value="bag">
                                 Bag content
                             </Tabs.Panel>
+
                             <Tabs.Panel value="people">
                                 People content
                             </Tabs.Panel>
