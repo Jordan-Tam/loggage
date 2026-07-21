@@ -69,8 +69,23 @@ type Mutation {
     # Appends a new packing list subdoc to the "packingLists" array of the user document specified by _id.
     createPackingList(_id: String!, name: String!, description: String!): PackingList
 
-    # Idle auto save will call this mutation to update the entire object all at once.
-    # editPackingList(_id: String!, packingListId: String!, name: String!, description: String!, bags: [Bag], categories: [String], items: [Item]): PackingList
+    editPackingListName(packingListId: String!, newName: String!): PackingList
+    editPackingListDescription(packingListId: String!, newDescription: String!): PackingList
+    
+    addPackingListBag(): PackingList
+    addPackingListCategory(): PackingList
+    addPackingListPerson(): PackingList
+    addItem(_id: String!, name: String!): PackingList
+
+    editPackingListBag(): PackingList
+    editPackingListCategory(): PackingList
+    editPackingListPerson(): PackingList
+    editItem(): PackingList
+    
+    deletePackingListBag(): PackingList
+    deletePackingListCategory(): PackingList
+    deletePackingListPerson(): PackingList
+    deleteItem(): PackingList
 
     # Deletes the packing list subdoc from the "packingLists" array of the user document specified by _id.
     deletePackingList(_id: String!, packingListId: String!): PackingList

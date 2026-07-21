@@ -30,6 +30,8 @@ import {
     IconDotsVertical
 } from '@tabler/icons-react';
 
+import ItemCard from "./ItemCard";
+
 export default function List() {
 
     const { data: session, isPending, refetch } = authClient.useSession();
@@ -60,10 +62,6 @@ export default function List() {
                 }
                 name
                 description
-                collaborators {
-                    _id
-                    username
-                }
                 bags {
                     name
                     type
@@ -73,20 +71,22 @@ export default function List() {
                         username
                     }
                 }
-                categories
-                items {
-                    name
+                categoryView {
                     category
-                    bag {
+                    items {
                         name
-                    }
-                    quantity
-                    weight
-                    individualOrTotal
-                    notes
-                    belongsTo {
-                        _id
-                        username
+                        category
+                        bag {
+                            name
+                        }
+                        quantity
+                        weight
+                        individualOrTotal
+                        notes
+                        # belongsTo {
+                            # _id
+                            # username
+                        # }
                     }
                 }
             }
@@ -355,56 +355,6 @@ export default function List() {
                                             <Box bd="1px solid blue" w="10%" bg="blue.1"></Box>
                                         </Flex>
                                     </Box>
-                                    <Box p="md" bd="1px solid red" bdrs="lg" mb="md">
-                                        <Flex gap="md" align="stretch">
-                                            <Stack /* bd="1px solid green" */ flex={1}>
-                                                <Group>
-                                                    <Title order={4}>Potato Chips</Title>
-                                                    <Text>Quantity: 5</Text>
-                                                    <Text>Weight: 10g</Text>
-                                                    <Text>Owner: Mark</Text>
-                                                    <Text>Bag: Purse</Text>
-                                                </Group>
-                                                <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
-                                            </Stack>
-                                            <Box bd="1px solid blue" w="10%" bg="blue.1"></Box>
-                                        </Flex>
-                                    </Box>
-                                    <Box p="md" bd="1px solid red" bdrs="lg">
-                                        <Flex gap="md" align="stretch">
-                                            <Stack /* bd="1px solid green" */ flex={1}>
-                                                <Group>
-                                                    <Title order={4}>Potato Chips</Title>
-                                                    <Text>Quantity: 5</Text>
-                                                    <Text>Weight: 10g</Text>
-                                                    <Text>Owner: Mark</Text>
-                                                    <Text>Bag: Purse</Text>
-                                                </Group>
-                                                <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
-                                            </Stack>
-                                            <Box bd="1px solid blue" w="10%" bg="blue.1"></Box>
-                                        </Flex>
-                                    </Box>
-                                    {/* <Table w="100%">
-                                        <Table.Thead>
-                                            <Table.Tr>
-                                                <Table.Th style={{ width: '25%' }}>Item</Table.Th>
-                                                <Table.Th style={{ width: '5%' }}>Quantity</Table.Th>
-                                                <Table.Th style={{ width: '10%' }}>Weight</Table.Th>
-                                                <Table.Th style={{ width: '15%' }}>Belongs To</Table.Th>
-                                                <Table.Th>Notes</Table.Th>
-                                            </Table.Tr>
-                                        </Table.Thead>
-                                        <Table.Tbody>
-                                            <Table.Tr>
-                                                <Table.Td>Potato Chips</Table.Td>
-                                                <Table.Td>5</Table.Td>
-                                                <Table.Td>10g</Table.Td>
-                                                <Table.Td>Mark</Table.Td>
-                                                <Table.Td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Table.Td>
-                                            </Table.Tr>
-                                        </Table.Tbody>
-                                    </Table> */}
                                 </Container>
                             </Tabs.Panel>
 
@@ -418,6 +368,38 @@ export default function List() {
                         </Tabs>
                     </Stack>
                 </Container>
+            </>
+        );
+        return (
+            <>
+            {getPackingListOfUser.categoryView.map((categoryViewEntry) => {
+                <Group>
+                    <TextInput
+                        value={categoryViewEntry.category}
+                        variant="unstyled"
+                        styles={{
+                            input: {
+                                fontSize: 'var(--mantine-h1-font-size)',
+                                fontWeight: 'var(--mantine-h1-font-weight)',
+                                lineHeight: 'var(--mantine-h1-line-height)',
+                                color: 'var(--mantine-color-text)',
+                                width: '100%',
+                                height: '100%'
+                            }
+                        }}
+                        mb="md"
+                    />
+                    <Menu>
+                        <Menu.Target>
+                            <Button></Button>
+                        </Menu.Target>
+                        {/* Edit and delete buttons */}
+                    </Menu>
+                </Group>
+                {categoryViewEntry.items.map((item) => {
+                    <ItemCard />
+                })}
+            })}
             </>
         )
     } else if (getPackingListOfUser_loading) {

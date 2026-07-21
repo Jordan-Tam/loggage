@@ -163,11 +163,6 @@ export default function Lists() {
             <>
 
                 <Modal opened={opened} onClose={close} title="Create New Packing List" centered>
-                    {/* <Select
-                        label="Start from scratch or use an existing template"
-                        placeholder="Choose a template"
-                        data={["Template1", "Template2"]}
-                    /> */}
                     <TextInput
                         value={name}
                         onChange={(e) => setName(e.currentTarget.value)}

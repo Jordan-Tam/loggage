@@ -4,6 +4,25 @@ import {users} from "@/mongodb/mongoCollections.js";
 import PackingList from "@/models/packingListSchema.js";
 import {GraphQLError} from 'graphql';
 
+const authorize = async (packingListId, contextUserId) => {
+
+    // Retrieve packing list.
+    const doc = await PackingList.findById(packingListId);
+    if (!doc) {
+        throw new GraphQLError("Packing List Not Found", {
+            extensions: {code: "NOT_FOUND", http: { status: 404 }}
+        });
+    }
+
+    // Check if the user has permission to edit this packing list.
+    if (contextUserId != doc.owner.toString()) {
+        throw new GraphQLError("You are not authorized to perform this action", {
+            extensions: {code: "FORBIDDEN", http: { status: 403 }}
+        })
+    }
+
+};
+
 export const resolvers = {
 
     PackingList: {
@@ -112,13 +131,14 @@ export const resolvers = {
 
         createPackingList: async (_, args, ctx) => {
 
-            // Make sure that the user currently signed in is updating their own data and not someone else's.
+            // Check if the user ID provided in the arguments matches the ID of the user currently signed in.
             if (args._id !== ctx.user.id) {
                 throw new GraphQLError("You are not authorized to perform this action.", {
-                    extensions: {code: "FORBIDDEN"}
+                    extensions: {code: "FORBIDDEN", http: { status: 403 }}
                 });
             }  
 
+            // Create the new packing list document and return it.
             return (await PackingList.create({
                 owner: args._id,
                 name: args.name,
@@ -127,9 +147,74 @@ export const resolvers = {
 
         },
 
-        /* editPackingList: async (_, args, ctx) => {
+        editPackingListName: async (_, args, ctx) => {
 
-        }, */
+            authorize(args.packingListId, ctx.user.id);
+
+            // Update the packing list name and return the updated object.
+            return (await PackingList.findOneAndUpdate(
+                { _id: args.packingListId },
+                { name: args.newName }
+            ));
+
+        },
+
+        editPackingListDescription: async (_, args, ctx) => {
+
+            // Retrieve packing list.
+            const doc = await PackingList.findById(args.packingListId);
+            if (!doc) {
+                throw new GraphQLError("Packing List Not Found", {
+                    extensions: {code: "NOT_FOUND", http: { status: 404 }}
+                });
+            }
+
+            // Check if the user has permission to edit this packing list.
+            if (ctx.user.id != doc.owner.toString()) {
+                throw new GraphQLError("You are not authorized to perform this action", {
+                    extensions: {code: "FORBIDDEN", http: { status: 403 }}
+                })
+            }
+
+            // Update the packing list description and return the updated object.
+            return (await PackingList.findOneAndUpdate(
+                { _id: args.packingListId },
+                { description: args.newDescription }
+            ));
+
+        },
+
+        addPackingListBag: async (_, args, ctx) => {
+
+            // Retrieve packing list.
+            const doc = await PackingList.findById(args.packingListId);
+            if (!doc) {
+                throw new GraphQLError("Packing List Not Found", {
+                    extensions: {code: "NOT_FOUND", http: { status: 404 }}
+                });
+            }
+
+            // Check if the user has permission to edit this packing list.
+            if (ctx.user.id != doc.owner.toString()) {
+                throw new GraphQLError("You are not authorized to perform this action", {
+                    extensions: {code: "FORBIDDEN", http: { status: 403 }}
+                })
+            }
+
+        },
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         deletePackingList: async (_, args, ctx) => {
 
