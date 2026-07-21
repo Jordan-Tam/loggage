@@ -41,6 +41,11 @@ export default function List() {
     const [endDate, setEndDate] = useState("");
     const [quantityTest, setQuantityTest] = useState("");
 
+    // After calling GET_PACKING_LIST_OF_USER, store the "categoryView" object here.
+    // Every time the user makes changes, update this state.
+    // Periodically autosave by passing this state to the edit packing list mutation.
+    const [categoryView, setCategoryView] = useState(null);
+
     const params = useParams();
 
     const router = useRouter();
@@ -62,11 +67,6 @@ export default function List() {
                 bags {
                     name
                     type
-                    height
-                    length
-                    width
-                    weight
-                    storageVolume
                     notes
                     belongsTo {
                         _id

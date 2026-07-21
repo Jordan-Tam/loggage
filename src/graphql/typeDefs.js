@@ -9,11 +9,11 @@ type User {
 type Bag {
     name: String
     type: String
-    height: Int
-    length: Int
-    width: Int
-    weight: Int
-    storageVolume: Int
+    # height: Int
+    # length: Int
+    # width: Int
+    # weight: Int
+    # storageVolume: Int
     notes: String
     belongsTo: User
 }
@@ -34,16 +34,6 @@ type CategoryViewEntry {
     items: [Item]
 }
 
-type BagViewEntry {
-    bag: String
-    items: [Item]
-}
-
-type PeopleViewEntry {
-    person: String
-    items: [Item]
-}
-
 type PackingList {
     _id: String
     owner: User
@@ -53,8 +43,17 @@ type PackingList {
     bags: [Bag]
     categories: [String]
     items: [Item]
-    weightUnit: String
     categoryView: [CategoryViewEntry]
+}
+
+type Template {
+    _id: String
+    owner: User
+    name: String
+    description: String
+    bags: [Bag]
+    categories: [String]
+    items: [Item]
 }
 
 type Query {
@@ -64,9 +63,28 @@ type Query {
 }
 
 type Mutation {
+
+    # Email, username, and password mutations will be done through existing Better Auth methods.
+
+    # Appends a new packing list subdoc to the "packingLists" array of the user document specified by _id.
     createPackingList(_id: String!, name: String!, description: String!): PackingList
-    editPackingList(name: String!): PackingList
-    addFriend(_id: String!): User
+
+    # Idle auto save will call this mutation to update the entire object all at once.
+    # editPackingList(_id: String!, packingListId: String!, name: String!, description: String!, bags: [Bag], categories: [String], items: [Item]): PackingList
+
+    # Deletes the packing list subdoc from the "packingLists" array of the user document specified by _id.
+    deletePackingList(_id: String!, packingListId: String!): PackingList
+
+    # Template mutations.
+    createTemplate(_id: String!, name: String!, description: String!): Template
+    editTemplate(_id: String!): Template
+    deleteTemplate(_id: String!): Template
+
+    # Friending mutations.
+    addFriend(_id: String!, friendId: String!): User
+    removeFriend(_id: String!, friendId: String!): User
+
+    # Test mutation; delete later.
     addTestString(_id: String!, testString: String!): User
 }
 `

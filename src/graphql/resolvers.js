@@ -8,6 +8,8 @@ export const resolvers = {
 
     PackingList: {
 
+        // In MongoDB, the "owner" field of a packing list document is of type ObjectId, but in typeDefs.js, the "owner" field is of a custom type called User.
+        // This is a type mismatch, so even though the field name is identical in both MongoDB and the GraphQL type definitions, a resolver for the "owner" field is necessary.
         owner: async (parentValue) => {
             const usersCollection = await users();
             const user = await usersCollection.findOne({
@@ -20,6 +22,10 @@ export const resolvers = {
             }
             return user;
         },
+
+        // In MongoDB, the "collaborators" field of a packing list document is of type [ObjectId], but in typeDefs.js, "collaborators" is defined as type [User].
+        // As of right now, the "collaborators" field of every packing list document is always an empty list since this feature has not been implemented yet. An empty list technically satisfies the [User] type, so GraphQL doesn't throw an error despite the type mismatch, so a resolver for "collaborators" is unnecessary. However, once the collaborators feature is implemented and "collaborators" is no longer empty, this resolver will be necessary because GraphQL will attempt to search for fields like "username" and "email" in a string variable, which will cause a TypeError.
+        //collaborators:
 
         categoryView: async (parentValue) => {
             let returnValue = [];
@@ -118,6 +124,14 @@ export const resolvers = {
                 name: args.name,
                 description: args.description
             }));
+
+        },
+
+        /* editPackingList: async (_, args, ctx) => {
+
+        }, */
+
+        deletePackingList: async (_, args, ctx) => {
 
         },
 

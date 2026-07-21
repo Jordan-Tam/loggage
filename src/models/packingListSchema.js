@@ -6,11 +6,11 @@ import { users } from "@/mongodb/mongoCollections.js";
 const bagSchema = new mongoose.Schema({
     name: String,
     type: String,
-    height: Number,
-    length: Number,
-    width: Number,
-    weight: Number,
-    storageVolume: Number,
+    // height: Number,
+    // length: Number,
+    // width: Number,
+    // weight: Number,
+    // storageVolume: Number,
     notes: String,
     belongsTo: mongoose.Schema.Types.ObjectId
 });
@@ -107,10 +107,6 @@ const packingListSchema = new mongoose.Schema({
     items: {
         type: [itemSchema],
         default: []
-    },
-    weightUnit: {
-        type: ["lb", "kg"],
-        default: "lb"
     }
 });
 

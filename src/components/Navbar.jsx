@@ -49,13 +49,6 @@ const mockdata = [
     { icon: IconUser, label: 'Account', url: "/account" },
     { icon: IconSettings, label: 'Settings', url: "/settings" },
     { icon: IconMicroscope, label: 'Testing Page', url: "/test" }
-    /* { icon: IconHome2, label: 'Home' },
-    { icon: IconGauge, label: 'Dashboard' },
-    { icon: IconDeviceDesktopAnalytics, label: 'Analytics' },
-    { icon: IconCalendarStats, label: 'Releases' },
-    { icon: IconUser, label: 'Account' },
-    { icon: IconFingerprint, label: 'Security' },
-    { icon: IconSettings, label: 'Settings' }, */
 ];
 
 export default function Navbar({ toggle }) {
