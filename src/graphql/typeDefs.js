@@ -9,14 +9,13 @@ type User {
 type Bag {
     name: String
     type: String
-    customType: String
     height: Int
     length: Int
     width: Int
     weight: Int
     storageVolume: Int
     notes: String
-    assignedTo: User
+    belongsTo: User
 }
 
 type Item {
@@ -27,8 +26,22 @@ type Item {
     weight: Int
     individualOrTotal: String
     notes: String
-    assignedTo: User
-    total_weight: Int # If weight=individual, total_weight = weight * quantity
+    belongsTo: User
+}
+
+type CategoryViewEntry {
+    category: String
+    items: [Item]
+}
+
+type BagViewEntry {
+    bag: String
+    items: [Item]
+}
+
+type PeopleViewEntry {
+    person: String
+    items: [Item]
 }
 
 type PackingList {
@@ -41,6 +54,7 @@ type PackingList {
     categories: [String]
     items: [Item]
     weightUnit: String
+    categoryView: [CategoryViewEntry]
 }
 
 type Query {

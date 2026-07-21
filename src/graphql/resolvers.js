@@ -19,6 +19,23 @@ export const resolvers = {
                 });
             }
             return user;
+        },
+
+        categoryView: async (parentValue) => {
+            let returnValue = [];
+            for (const category of parentValue.categories) {
+                let newEntry = {
+                    category,
+                    items: []
+                };
+                for (const item of parentValue.items) {
+                    if (item.category == category) {
+                        newEntry.items.push(item)
+                    }
+                }
+                returnValue.push(newEntry);
+            }
+            return returnValue;
         }
 
     },

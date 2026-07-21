@@ -5,27 +5,14 @@ import { users } from "@/mongodb/mongoCollections.js";
 
 const bagSchema = new mongoose.Schema({
     name: String,
-    type: [
-        "Backpack",
-        "Suitcase",
-        "Handbag",
-        "Duffel bag",
-        "Thermal bag",
-        "Reusable shopping bag",
-        "Drawstring bag",
-        "Paper bag",
-        "Plastic bag",
-        "Box",
-        "Other"
-    ],
-    customType: String,
+    type: String,
     height: Number,
     length: Number,
     width: Number,
     weight: Number,
     storageVolume: Number,
     notes: String,
-    assignedTo: mongoose.Schema.Types.ObjectId
+    belongsTo: mongoose.Schema.Types.ObjectId
 });
 
 const itemSchema = new mongoose.Schema({
@@ -68,7 +55,7 @@ const itemSchema = new mongoose.Schema({
     notes: {
         type: String
     },
-    assignedTo: {
+    belongsTo: {
         type: mongoose.Schema.Types.ObjectId
     }
 });

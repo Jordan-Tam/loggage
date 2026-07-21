@@ -17,6 +17,7 @@ import {
     Group,
     Menu,
     NumberInput,
+    Select,
     Stack,
     Table,
     Tabs,
@@ -61,14 +62,13 @@ export default function List() {
                 bags {
                     name
                     type
-                    customType
                     height
                     length
                     width
                     weight
                     storageVolume
                     notes
-                    assignedTo {
+                    belongsTo {
                         _id
                         username
                     }
@@ -84,7 +84,7 @@ export default function List() {
                     weight
                     individualOrTotal
                     notes
-                    assignedTo {
+                    belongsTo {
                         _id
                         username
                     }
@@ -204,7 +204,7 @@ export default function List() {
                             <Tabs.Panel value="category" /* className="border-1 border-red-500" */>
                                 <Container m={0} mt="lg" size="xl">
                                     {/* <Title order={2} mb="md">Food</Title> */}
-                                    <Group justify="flex-start">
+                                    <Group>
                                         <TextInput
                                             value="Food"
                                             variant="unstyled"
@@ -230,51 +230,125 @@ export default function List() {
                                     <Box p="md" bd="1px solid red" bdrs="lg" mb="md">
                                         <Flex gap="md" align="stretch">
                                             <Stack /* bd="1px solid green" */ flex={1}>
-                                            <TextInput
-                                                value="Potato Chips"
-                                                /* value={name}
-                                                onChange={(e) => setName(e.currentTarget.value)} */
-                                                variant="unstyled"
-                                                styles={{
-                                                    input: {
-                                                        fontSize: 'var(--mantine-h2-font-size)',
-                                                        fontWeight: 'var(--mantine-h2-font-weight)',
-                                                        lineHeight: 'var(--mantine-h2-line-height)',
-                                                        color: 'var(--mantine-color-text)',
-                                                        width: '100%',
-                                                        height: '100%'
-                                                    }
-                                                }}
-                                            />
-                                                <Group>
-                                                    <Text>
-                                                        Quantity:
-                                                    </Text>
-                                                    <TextInput
-                                                        value={quantityTest}
-                                                        variant="unstyled"
-                                                        onChange={(e) => {
-                                                            setQuantityTest(e.currentTarget.value.replace(/[^0-9]/g, ''))
-                                                        }}
-                                                        maxLength={5}
-                                                        radius="xs"
-                                                        size="xs"
-                                                        w="5%"
-                                                        className="border-1 border-red-500"
+                                            <Group justify="space-between">
+                                                <TextInput
+                                                    value="Potato Chips"
+                                                    /* value={name}
+                                                    onChange={(e) => setName(e.currentTarget.value)} */
+                                                    variant="unstyled"
                                                     styles={{
                                                         input: {
-                                                            fontSize: 'var(--mantine-text-font-size)',
-                                                            fontWeight: 'var(--mantine-text-font-weight)',
-                                                            lineHeight: 'var(--mantine-line-height)',
+                                                            fontSize: 'var(--mantine-h2-font-size)',
+                                                            fontWeight: 'var(--mantine-h2-font-weight)',
+                                                            lineHeight: 'var(--mantine-h2-line-height)',
                                                             color: 'var(--mantine-color-text)',
                                                             width: '100%',
                                                             height: '100%'
                                                         }
                                                     }}
+                                                />
+                                                <Menu>
+                                                    <Menu.Target>
+                                                        <Button variant="white">
+                                                            <IconDotsVertical stroke={2}/>
+                                                        </Button>
+                                                    </Menu.Target>
+                                                </Menu>
+                                            </Group>
+                                                <Group gap="5px">
+                                                    <Text>
+                                                        Quantity:
+                                                    </Text>
+                                                    <TextInput
+                                                        value={quantityTest}
+                                                        /* variant="unstyled" */
+                                                        onChange={(e) => {
+                                                            setQuantityTest(e.currentTarget.value.replace(/[^0-9]/g, ''))
+                                                        }}
+                                                        maxLength={5}
+                                                        /* radius="xs" */
+                                                        size="sm"
+                                                        w="70px"
+                                                        mr="sm"
+                                                        /* className="border-1 border-red-500" */
+                                                        styles={{
+                                                            input: {
+                                                                fontSize: 'var(--mantine-text-font-size)',
+                                                                fontWeight: 'var(--mantine-text-font-weight)',
+                                                                lineHeight: 'var(--mantine-line-height)',
+                                                                color: 'var(--mantine-color-text)',
+                                                                width: '100%',
+                                                                height: '100%',
+                                                                textAlign: "center"
+                                                            }
+                                                        }}
                                                     />
-                                                    <Text>Weight: 10g</Text>
-                                                    <Text>Owner: Mark</Text>
-                                                    <Text>Bag: Purse</Text>
+                                                    <Text>Weight:</Text>
+                                                    <TextInput
+                                                        value={quantityTest}
+                                                        /* variant="unstyled" */
+                                                        onChange={(e) => {
+                                                            setQuantityTest(e.currentTarget.value.replace(/[^0-9]/g, ''))
+                                                        }}
+                                                        maxLength={5}
+                                                        /* radius="xs" */
+                                                        size="sm"
+                                                        w="70px"
+                                                        /* className="border-1 border-red-500" */
+                                                        styles={{
+                                                            input: {
+                                                                fontSize: 'var(--mantine-text-font-size)',
+                                                                fontWeight: 'var(--mantine-text-font-weight)',
+                                                                lineHeight: 'var(--mantine-line-height)',
+                                                                color: 'var(--mantine-color-text)',
+                                                                width: '100%',
+                                                                height: '100%',
+                                                                textAlign: "center"
+                                                            }
+                                                        }}
+                                                    />
+                                                    <Select
+                                                        data={["lb", "kg"]}
+                                                        size="sm"
+                                                        w="60px"
+                                                        styles={{
+                                                            input: {
+
+                                                            }
+                                                        }}
+                                                    />
+                                                    <Select
+                                                        data={["each", "total"]}
+                                                        size="sm"
+                                                        w="80px"
+                                                        mr="sm"
+                                                        styles={{
+                                                            input: {
+
+                                                            }
+                                                        }}
+                                                    />
+                                                    <Text>Owner:</Text>
+                                                    <Select
+                                                        data={["Mark", "Penelope", "Peter"]}
+                                                        size="sm"
+                                                        mr="sm"
+                                                        styles={{
+                                                            input: {
+
+                                                            }
+                                                        }}
+                                                    />
+                                                    <Text>Bag:</Text>
+                                                    <Select
+                                                        data={["Purse", "Backpack"]}
+                                                        size="sm"
+                                                        styles={{
+                                                            input: {
+
+                                                            }
+                                                        }}
+                                                    />
                                                 </Group>
                                                 <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>
                                             </Stack>
