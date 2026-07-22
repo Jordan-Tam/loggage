@@ -18,8 +18,10 @@ import {
     Modal,
     Select,
     SimpleGrid,
+    Tabs,
     Text,
     TextInput,
+    Title,
     UnstyledButton
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
@@ -73,6 +75,7 @@ export default function Lists() {
     const router = useRouter();
 
     const [opened, { open, close }] = useDisclosure(false);
+    // const [opened, { open, close }] = useDisclosure(false);
 
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -188,14 +191,60 @@ export default function Lists() {
                     </Button>
                 </Modal>
 
+                <Modal /* opened={opened} onClose={close} */ title="Create New Template" centered>
+                    <TextInput
+                        /* value={name} */
+                        /* onChange={(e) => setName(e.currentTarget.value)} */
+                        label="Name"
+                        required
+                        radius="md"
+                    />
+                    <TextInput
+                        /* value={description} */
+                        /* onChange={(e) => setDescription(e.currentTarget.value)} */
+                        label="Description"
+                        required
+                        mt="md"
+                        radius="md"
+                    />
+                    <Button
+                        fullWidth
+                        mt="xl"
+                        radius="md"
+                        onClick={handleSubmit}
+                    >
+                        Create template
+                    </Button>
+                </Modal>
+
                 <Container m={0} size="lg" /* className="border-1 border-red-500" */>
-                    <Group mt="lg">
+                    <Group mt="lg" mb="xl">
                         <Button
                             color="green"
                             onClick={open}
                         >New Packing List</Button>
                         <Button color="yellow">New Template</Button>
                     </Group>
+
+                    <Tabs variant="outline" defaultValue="lists">
+                        <Tabs.List>
+                            <Tabs.Tab value="lists">
+                                <Title order={3}>Packing Lists</Title>
+                            </Tabs.Tab>
+                            <Tabs.Tab value="templates">
+                                <Title order={3}>Templates</Title>
+                            </Tabs.Tab>
+                        </Tabs.List>
+
+                        <Tabs.Panel value="lists">
+                            <Text>Packing lists</Text>
+                        </Tabs.Panel>
+
+                        <Tabs.Panel value="templates">
+                            <Text>Templates</Text>
+                        </Tabs.Panel>
+                    </Tabs>
+
                     <SimpleGrid cols={{
                         base: 1, md: 3
                     }} mt="lg">

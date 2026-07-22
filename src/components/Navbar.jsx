@@ -43,7 +43,7 @@ function NavbarLink({ icon: Icon, label, active, onClick }) {
 
 const mockdata = [
     { icon: IconHome2, label: 'Home', url: "/home" },
-    { icon: IconCheckupList, label: 'Packing Lists', url: "/lists" },
+    { icon: IconCheckupList, label: 'My Packing Lists and Templates', url: "/lists" },
     { icon: IconListSearch, label: 'Browse Templates', url: "/browse" },
     { icon: IconUsersGroup, label: "Friends", url: "/friends" },
     { icon: IconUser, label: 'Account', url: "/account" },

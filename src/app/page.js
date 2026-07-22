@@ -264,6 +264,7 @@ export default function Home() {
               size="xl"
               className={heroClasses.control}
               mt={40}
+              component={Link} href="/signup"
             >
               Get started
             </Button>

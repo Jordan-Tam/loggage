@@ -72,20 +72,20 @@ type Mutation {
     editPackingListName(packingListId: String!, newName: String!): PackingList
     editPackingListDescription(packingListId: String!, newDescription: String!): PackingList
     
-    addPackingListBag(): PackingList
-    addPackingListCategory(): PackingList
-    addPackingListPerson(): PackingList
+    addPackingListBag: PackingList
+    addPackingListCategory: PackingList
+    addPackingListPerson: PackingList
     addItem(_id: String!, name: String!): PackingList
 
-    editPackingListBag(): PackingList
-    editPackingListCategory(): PackingList
-    editPackingListPerson(): PackingList
-    editItem(): PackingList
+    editPackingListBag: PackingList
+    editPackingListCategory: PackingList
+    editPackingListPerson: PackingList
+    editItem: PackingList
     
-    deletePackingListBag(): PackingList
-    deletePackingListCategory(): PackingList
-    deletePackingListPerson(): PackingList
-    deleteItem(): PackingList
+    deletePackingListBag: PackingList
+    deletePackingListCategory: PackingList
+    deletePackingListPerson: PackingList
+    deleteItem: PackingList
 
     # Deletes the packing list subdoc from the "packingLists" array of the user document specified by _id.
     deletePackingList(_id: String!, packingListId: String!): PackingList
