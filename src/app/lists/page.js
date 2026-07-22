@@ -89,9 +89,6 @@ export default function Lists() {
                 }
                 name
                 description
-                collaborators {
-                    _id
-                }
             }
         }
     `;

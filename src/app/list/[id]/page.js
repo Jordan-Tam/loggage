@@ -31,6 +31,9 @@ import {
 } from '@tabler/icons-react';
 
 import ItemCard from "./ItemCard";
+import AddCategoryModal from "./AddCategoryModal";
+import AddBagModal from "./AddBagModal";
+import AddPersonModal from "./AddPersonModal";
 
 export default function List() {
 
@@ -47,6 +50,12 @@ export default function List() {
     // Every time the user makes changes, update this state.
     // Periodically autosave by passing this state to the edit packing list mutation.
     const [categoryView, setCategoryView] = useState(null);
+
+
+    // Modal states.
+    const [addBagModal_opened, { addBagModal_open, addBagModal_close }] = useDisclosure(false);
+    const [addCategoryModal_opened, { addCategoryModal_open, addCategoryModal_close }] = useDisclosure(false);
+    const [addPersonModal_opened, { addPersonModal_open, addPersonModal_close }] = useDisclosure(false);
 
     const params = useParams();
 
@@ -122,6 +131,22 @@ export default function List() {
         const {getPackingListOfUser} = getPackingListOfUser_data;
         return (
             <>
+                
+                <AddCategoryModal
+                    opened={addCategoryModal_opened}
+                    close={addCategoryModal_close}
+                />
+
+                <AddBagModal
+                    opened={addBagModal_opened}
+                    close={addBagModal_close}
+                />
+        
+                <AddPersonModal
+                    opened={addPersonModal_opened}
+                    close={addPersonModal_close}
+                />
+
                 <Container ml={20} size="xl">
                     <Stack mt="xl" gap="lg" /* bd="1px solid var(--mantine-color-gray-3)" */>
                         <TextInput
@@ -184,9 +209,9 @@ export default function List() {
                             </Table>
                         </Box>
                         <Group mb="xl">
-                            <Button>Add Category</Button>
-                            <Button>Add Bag</Button>
-                            <Button>Add Person</Button>
+                            <Button onClick={addCategoryModal_open}>Add Category</Button>
+                            <Button onClick={addBagModal_open}>Add Bag</Button>
+                            <Button onClick={addPersonModal_open}>Add Person</Button>
                         </Group>
                         <Tabs variant="outline" defaultValue="category">
                             <Tabs.List /* className="border-1 border-red-500" */>

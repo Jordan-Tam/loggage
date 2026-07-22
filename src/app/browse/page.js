@@ -24,6 +24,8 @@ import {
     IconUserPlus
 } from '@tabler/icons-react';
 
+import PackingListCard from "@/components/PackingListCard";
+
 export default function Browse() {
     return (
         <>

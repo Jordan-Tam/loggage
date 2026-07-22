@@ -115,7 +115,7 @@ export const resolvers = {
             }
 
             // Check if the packing list belongs to the user.
-            if (pl.owner.toString() !== args.userId || pl.collaborators.includes(new ObjectId(args.userId))) {
+            if (pl.owner.toString() !== args.userId /* || pl.collaborators.includes(new ObjectId(args.userId)) */) {
                 throw new GraphQLError("Packing list not found.", {
                     extensions: {code: "NOT_FOUND"}
                 });   

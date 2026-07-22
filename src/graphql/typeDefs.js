@@ -39,7 +39,6 @@ type PackingList {
     owner: User
     name: String
     description: String
-    collaborators: [User]
     bags: [Bag]
     categories: [String]
     items: [Item]

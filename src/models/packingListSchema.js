@@ -6,13 +6,22 @@ import { users } from "@/mongodb/mongoCollections.js";
 const bagSchema = new mongoose.Schema({
     name: String,
     type: String,
+    notes: String,
+    belongsTo: {
+        type: String,
+        validate: {
+            validator: async function (str) {
+                const parent = this.parent();
+                return parent && parent.people.includes(str);
+            },
+            message: props => `${props.value} is not a valid owner.`
+        }
+    }
     // height: Number,
     // length: Number,
     // width: Number,
     // weight: Number,
     // storageVolume: Number,
-    notes: String,
-    belongsTo: mongoose.Schema.Types.ObjectId
 });
 
 const itemSchema = new mongoose.Schema({
@@ -56,7 +65,14 @@ const itemSchema = new mongoose.Schema({
         type: String
     },
     belongsTo: {
-        type: mongoose.Schema.Types.ObjectId
+        type: String,
+        validate: {
+            validator: async function (str) {
+                const parent = this.parent();
+                return parent && parent.people.includes(str);
+            },
+            message: props => `${props.value} is not a valid owner.`
+        }
     }
 });
 
@@ -92,15 +108,15 @@ const packingListSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
-    collaborators: {
-        type: [mongoose.Schema.Types.ObjectId],
-        default: []
-    },
     bags: {
         type: [bagSchema],
         default: []
     },
     categories: {
+        type: [String],
+        default: []
+    },
+    people: {
         type: [String],
         default: []
     },
